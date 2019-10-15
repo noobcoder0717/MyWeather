@@ -2,10 +2,12 @@ package com.example.myweather.Activity.bean;
 
 import com.google.gson.annotations.SerializedName;
 
+import org.litepal.crud.LitePalSupport;
+
 import java.io.Serializable;
 import java.util.List;
 
-public class Data implements Serializable {
+public class Data extends LitePalSupport implements Serializable {
     @SerializedName("yesterday")
     Yesterday yesterday;
 

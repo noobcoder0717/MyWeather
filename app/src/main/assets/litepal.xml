@@ -4,6 +4,7 @@
     <version value="1"></version>
 
     <list>
-        <mapping class="com.example.myweather.Activity.bean.City"/>
+        <mapping class="com.example.myweather.Activity.bean.Forecast"/>
+        <mapping class="com.example.myweather.Activity.bean.Data"/>
     </list>
 </litepal>

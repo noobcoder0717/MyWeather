@@ -2,9 +2,12 @@ package com.example.myweather.Activity.bean;
 
 import com.google.gson.annotations.SerializedName;
 
+import org.litepal.LitePal;
+import org.litepal.crud.LitePalSupport;
+
 import java.io.Serializable;
 
-public class Forecast implements Serializable {
+public class Forecast extends LitePalSupport implements Serializable {
     @SerializedName("date")
     String date;
 

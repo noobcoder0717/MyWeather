@@ -13,18 +13,25 @@ import androidx.recyclerview.widget.RecyclerView;
 
 import com.example.myweather.Activity.AddCityActivity;
 import com.example.myweather.Activity.WeatherDetailActivity;
-import com.example.myweather.Activity.bean.City;
+import com.example.myweather.Activity.bean.Data;
+import com.example.myweather.Activity.bean.Forecast;
 import com.example.myweather.R;
 
 import java.util.List;
 
-public class CityAdapter extends RecyclerView.Adapter<CityAdapter.ViewHolder> {
-
-    List<City> cityList;
+public class DataAdapter extends RecyclerView.Adapter<DataAdapter.ViewHolder> {
+    Forecast forecastListToday;
+    Forecast forecastListTomorrow;
+    Forecast forecastlistDayAfterTomorrow;
+    List<List<Forecast>> forecastList;
+    List<Data> dataList;
     Context context;
 
-    public CityAdapter(List<City> cityList,Context context){
-        this.cityList=cityList;
+    public DataAdapter(List<Data> dataList,Forecast forecastListToday,Forecast forecastListTomorrow,Forecast forecastlistDayAfterTomorrow,Context context){
+        this.forecastListToday=forecastListToday;
+        this.forecastListTomorrow=forecastListTomorrow;
+        this.forecastlistDayAfterTomorrow=forecastlistDayAfterTomorrow;
+        this.dataList=dataList;
         this.context=context;
     }
 
@@ -32,15 +39,17 @@ public class CityAdapter extends RecyclerView.Adapter<CityAdapter.ViewHolder> {
     class ViewHolder extends RecyclerView.ViewHolder{
         CardView weatherCardview;
         ImageView weatherPhoto;
-        TextView cityName;
+        TextView DataName;
         TextView weatherDegree;
+        TextView weatherToday;
 
         ViewHolder(View view){
             super(view);
             weatherPhoto=view.findViewById(R.id.weather_photo);
-            cityName=view.findViewById(R.id.city_name);
+            DataName=view.findViewById(R.id.city_name);
             weatherDegree=view.findViewById(R.id.weather_degree);
             weatherCardview=view.findViewById(R.id.weather_cardview);
+            weatherToday=view.findViewById(R.id.weather_today);
         }
     }
 
@@ -52,9 +61,9 @@ public class CityAdapter extends RecyclerView.Adapter<CityAdapter.ViewHolder> {
             @Override
             public void onClick(View view) {
                 int position=holder.getAdapterPosition();
-                City city=cityList.get(position);
-                if(position!=cityList.size()-1) {
-                    WeatherDetailActivity.start(context, city);
+                Data data=dataList.get(position);
+                if(position!=dataList.size()-1) {
+                    WeatherDetailActivity.start(context, data);
                 }else{
                     AddCityActivity.start(context);
                 }
@@ -65,16 +74,17 @@ public class CityAdapter extends RecyclerView.Adapter<CityAdapter.ViewHolder> {
 
     @Override
     public void onBindViewHolder(ViewHolder holder,int position){
-        City city=cityList.get(position);
-        if(position!=cityList.size()-1){
-            holder.cityName.setText(city.getData().getCity());
-            holder.weatherDegree.setText(city.getData().getWendu());
+        Data data=dataList.get(position);
+        if(position!=dataList.size()-1){
+            holder.DataName.setText(data.getCity());
+            holder.weatherDegree.setText(data.getWendu()+"℃");
             holder.weatherPhoto.setImageResource(R.drawable.weather);
+            holder.weatherToday.setText(forecastListToday.getType());
         }
     }
 
     @Override
     public int getItemCount(){
-        return cityList.size();
+        return dataList.size();
     }
 }

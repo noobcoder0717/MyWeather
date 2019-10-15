@@ -6,5 +6,5 @@ import retrofit2.http.Query;
 
 public interface ClientApi {
     @GET("weatherApi?")
-    Observable<Data> getData(@Query("city") String city);
+    Observable<City> getCity(@Query("city") String city);
 }
