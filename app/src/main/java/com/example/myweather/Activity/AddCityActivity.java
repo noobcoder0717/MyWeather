@@ -20,7 +20,8 @@ public class AddCityActivity extends AppCompatActivity {
     }
 
     public static void start(Context context){
-        context.startActivity(new Intent(context,AddCityActivity.class));
+        Intent intent=new Intent(context,AddCityActivity.class);
+        context.startActivity(intent);
     }
 
     public void addFragment(){

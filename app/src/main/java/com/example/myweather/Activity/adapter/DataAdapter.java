@@ -20,17 +20,16 @@ import com.example.myweather.R;
 import java.util.List;
 
 public class DataAdapter extends RecyclerView.Adapter<DataAdapter.ViewHolder> {
-    Forecast forecastListToday;
-    Forecast forecastListTomorrow;
-    Forecast forecastlistDayAfterTomorrow;
-    List<List<Forecast>> forecastList;
+//    Forecast forecastListToday;
+//    Forecast forecastListTomorrow;
+//    Forecast forecastlistDayAfterTomorrow;
+//    List<List<Forecast>> forecastList;
+    String weatherToday;
     List<Data> dataList;
     Context context;
 
-    public DataAdapter(List<Data> dataList,Forecast forecastListToday,Forecast forecastListTomorrow,Forecast forecastlistDayAfterTomorrow,Context context){
-        this.forecastListToday=forecastListToday;
-        this.forecastListTomorrow=forecastListTomorrow;
-        this.forecastlistDayAfterTomorrow=forecastlistDayAfterTomorrow;
+    public DataAdapter(List<Data> dataList,Context context){
+
         this.dataList=dataList;
         this.context=context;
     }
@@ -38,14 +37,14 @@ public class DataAdapter extends RecyclerView.Adapter<DataAdapter.ViewHolder> {
 
     class ViewHolder extends RecyclerView.ViewHolder{
         CardView weatherCardview;
-        ImageView weatherPhoto;
+        CardView weatherCard;
         TextView DataName;
         TextView weatherDegree;
         TextView weatherToday;
 
         ViewHolder(View view){
             super(view);
-            weatherPhoto=view.findViewById(R.id.weather_photo);
+            weatherCard=view.findViewById(R.id.weather_photo);
             DataName=view.findViewById(R.id.city_name);
             weatherDegree=view.findViewById(R.id.weather_degree);
             weatherCardview=view.findViewById(R.id.weather_cardview);
@@ -61,9 +60,9 @@ public class DataAdapter extends RecyclerView.Adapter<DataAdapter.ViewHolder> {
             @Override
             public void onClick(View view) {
                 int position=holder.getAdapterPosition();
-                Data data=dataList.get(position);
+                String cityName=dataList.get(position).getCity();
                 if(position!=dataList.size()-1) {
-                    WeatherDetailActivity.start(context, data);
+                    WeatherDetailActivity.start(context, cityName);
                 }else{
                     AddCityActivity.start(context);
                 }
@@ -78,8 +77,8 @@ public class DataAdapter extends RecyclerView.Adapter<DataAdapter.ViewHolder> {
         if(position!=dataList.size()-1){
             holder.DataName.setText(data.getCity());
             holder.weatherDegree.setText(data.getWendu()+"℃");
-            holder.weatherPhoto.setImageResource(R.drawable.weather);
-            holder.weatherToday.setText(forecastListToday.getType());
+            holder.weatherCardview.setBackgroundResource(R.drawable.weather);
+            holder.weatherToday.setText(data.getWeatherToday());
         }
     }
 

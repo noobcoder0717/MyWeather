@@ -6,5 +6,6 @@
     <list>
         <mapping class="com.example.myweather.Activity.bean.Forecast"/>
         <mapping class="com.example.myweather.Activity.bean.Data"/>
+
     </list>
 </litepal>
