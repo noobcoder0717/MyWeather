@@ -17,27 +17,24 @@
         android:layout_height="match_parent"
         android:orientation="horizontal">
 
-        <androidx.cardview.widget.CardView
-            android:id="@+id/weather_photo"
-            android:layout_width="0dp"
-            android:layout_height="match_parent"
-            android:layout_weight="3"
-            android:background="@drawable/add"
-            app:cardCornerRadius="5dp">
+
 
             <TextView
                 android:id="@+id/city_name"
-                android:padding="20dp"
+                android:gravity="center_vertical"
                 android:textSize="20sp"
-                android:layout_width="match_parent"
+                android:layout_width="0dp"
+                android:layout_weight="4"
                 android:layout_height="match_parent"
-                android:text="点击添加城市"/>
-        </androidx.cardview.widget.CardView>
+                android:text="点击添加城市"
+                android:lines="2"/>
+
 
         <androidx.cardview.widget.CardView
             android:layout_width="0dp"
             android:layout_height="match_parent"
             android:layout_weight="8"
+            app:cardElevation="0dp"
             app:cardCornerRadius="5dp">
             <RelativeLayout
                 android:layout_width="match_parent"
@@ -56,7 +53,7 @@
                     android:layout_height="wrap_content"
                     android:layout_alignParentRight="true"
                     android:layout_alignParentBottom="true"
-                    android:text="  ℃"
+                    android:text="  "
                     android:textSize="50sp" />
             </RelativeLayout>
 

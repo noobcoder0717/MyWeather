@@ -1,7 +1,9 @@
 package com.example.myweather.Activity.Fragment;
 
+import android.content.ContentValues;
 import android.content.Intent;
 import android.os.Bundle;
+import android.os.Handler;
 import android.util.Log;
 import android.view.LayoutInflater;
 import android.view.Menu;
@@ -56,77 +58,78 @@ public class WeatherListFragment extends Fragment {
     @Bind(R.id.weather_list)
     RecyclerView mRecyclerView;
 
-    public static WeatherListFragment newInstance(){
-        WeatherListFragment fragment=new WeatherListFragment();
+    public static WeatherListFragment newInstance() {
+        WeatherListFragment fragment = new WeatherListFragment();
         return fragment;
     }
 
-
+    @Override
+    public void onCreate(Bundle savedInstanceState){
+        Log.i("WeatherListFragment","onCreate");
+        super.onCreate(savedInstanceState);
+    }
 
     @Override
-    public View onCreateView(LayoutInflater inflater, ViewGroup container,Bundle savedInstanceState){
-        View view=inflater.inflate(R.layout.fragment_weather_list,container,false);
-        ButterKnife.bind(this,view);
+    public View onCreateView(LayoutInflater inflater, ViewGroup container, Bundle savedInstanceState) {
+        Log.i("WeatherListFragment","onCreateView");
+        View view = inflater.inflate(R.layout.fragment_weather_list, container, false);
+        ButterKnife.bind(this, view);
 
         mRecyclerView.setLayoutManager(new LinearLayoutManager(getActivity()));
 
-        dataList=new ArrayList<>();
-        dataList= LitePal.findAll(Data.class);//获取收藏城市列表
+        dataList = new ArrayList<>();
+        dataList = LitePal.findAll(Data.class);//获取收藏城市列表
         dataList.add(new Data());
 
-        adapter=new DataAdapter(dataList,getActivity());
+        adapter = new DataAdapter(dataList, getActivity());
         mRecyclerView.setAdapter(adapter);
+        refresh();
         return view;
     }
 
     @Override
-    public void onActivityCreated(Bundle savedInstanceState){
+    public void onActivityCreated(Bundle savedInstanceState) {
         super.onActivityCreated(savedInstanceState);
         setHasOptionsMenu(true);
-        AppCompatActivity appCompatActivity=(AppCompatActivity)getActivity();
+        AppCompatActivity appCompatActivity = (AppCompatActivity) getActivity();
         appCompatActivity.setSupportActionBar(toolbar);
-        ActionBar actionBar=appCompatActivity.getSupportActionBar();
-        Calendar calendar=Calendar.getInstance();
-        int hour=(calendar.get(Calendar.HOUR_OF_DAY)+8)%24;
-        int minute=calendar.get(Calendar.MINUTE);
-        if(actionBar!=null){
-            actionBar.setTitle(hour+":"+minute);
-        }
+
     }
 
     @Override
-    public void onCreateOptionsMenu(Menu menu, MenuInflater inflater){
-        super.onCreateOptionsMenu(menu,inflater);
-        inflater.inflate(R.menu.menu_weatherlist,menu);
+    public void onCreateOptionsMenu(Menu menu, MenuInflater inflater) {
+        super.onCreateOptionsMenu(menu, inflater);
+        inflater.inflate(R.menu.menu_weatherlist, menu);
     }
 
     @Override
-    public boolean onOptionsItemSelected(MenuItem item){
-        switch(item.getItemId()){
+    public boolean onOptionsItemSelected(MenuItem item) {
+        switch (item.getItemId()) {
             case R.id.refresh:
                 refresh();
                 return true;
             case R.id.edit:
                 startActivity(new Intent(getContext(), DeleteCityActivity.class));
-                default:
-                    return super.onOptionsItemSelected(item);
+            default:
+                return super.onOptionsItemSelected(item);
         }
     }
+
     @Override
-    public void onStart(){
+    public void onStart() {
         super.onStart();
         dataList.clear();
-        dataList=LitePal.findAll(Data.class);
+        dataList = LitePal.findAll(Data.class);
         dataList.add(new Data());
-        adapter=new DataAdapter(dataList,getActivity());
+        adapter = new DataAdapter(dataList, getActivity());
         mRecyclerView.setAdapter(adapter);
-        Log.i("WeatherListFragment","onStart()");
+        Log.i("WeatherListFragment", "onStart()");
     }
 
-    public static Retrofit create(){
-        OkHttpClient.Builder builder=new OkHttpClient.Builder();
+    public static Retrofit create() {
+        OkHttpClient.Builder builder = new OkHttpClient.Builder();
         builder.readTimeout(10, TimeUnit.SECONDS);
-        builder.connectTimeout(10,TimeUnit.SECONDS);
+        builder.connectTimeout(10, TimeUnit.SECONDS);
         return new Retrofit.Builder()
                 .baseUrl("https://www.apiopen.top/")
                 .client(builder.build())
@@ -135,17 +138,16 @@ public class WeatherListFragment extends Fragment {
                 .build();
     }
 
-    public void refresh(){
-
-        for(int i=0;i<dataList.size()-1;i++){
-            String cityname=dataList.get(i).getCity();
-            final int idx=i;
+    public void refresh() {
+        for (int i = 0; i < dataList.size() - 1; i++) {
+            String cityname = dataList.get(i).getCity();
+            final int idx = i;
 
 
             Retrofit retrofit = create();
             ClientApi api = retrofit.create(ClientApi.class);
             Observable<City> cityObservable = api.getCity(cityname);
-            cityObservable.subscribeOn(Schedulers.io())
+            cityObservable.subscribeOn(Schedulers.io())//这里改一下线程，会使onNext先于notifyDataSetChanged()调用
                     .observeOn(AndroidSchedulers.mainThread())
                     .subscribe(new Observer<City>() {
                         @Override
@@ -156,13 +158,20 @@ public class WeatherListFragment extends Fragment {
                         public void onNext(City city) {
                             dataList.get(idx).setWeatherToday(city.getData().getForecast().get(0).getType());
                             dataList.get(idx).setWendu(city.getData().getWendu());
-                            Log.i("WeatherListFragment","onNext");
-                            adapter.notifyDataSetChanged();
-                            Toast.makeText(getContext(),"刷新成功",Toast.LENGTH_SHORT).show();
+
+                            Data data=new Data();
+                            data.setWeatherToday(city.getData().getForecast().get(0).getType());
+                            data.setWendu(city.getData().getWendu());
+                            data.updateAll("city=?",dataList.get(idx).getCity());//更新数据库中对应城市的数据
+
+
+                            Log.i("WeatherListFragment", "onNext");
                         }
 
                         @Override
                         public void onError(Throwable e) {
+                            Log.i("WeatherListFragment", e.toString());
+                            Toast.makeText(getActivity(),"刷新失败，请检查网络连接",Toast.LENGTH_SHORT).show();
                         }
 
                         @Override
@@ -171,7 +180,35 @@ public class WeatherListFragment extends Fragment {
                         }
                     });
         }
+        getActivity().runOnUiThread(new Runnable() {
+            @Override
+            public void run() {
+                AppCompatActivity appCompatActivity = (AppCompatActivity) getActivity();
+                appCompatActivity.setSupportActionBar(toolbar);
+                ActionBar actionBar = appCompatActivity.getSupportActionBar();
+                Calendar calendar = Calendar.getInstance();
+                int hour = (calendar.get(Calendar.HOUR_OF_DAY));
+                int minute = calendar.get(Calendar.MINUTE);
+                if (actionBar != null) {
+                    if (minute < 10)
+                        actionBar.setTitle("上次更新时间：" + hour + ":0" + minute);
+                    else
+                        actionBar.setTitle("上次更新时间：" + hour + ":" + minute);
+                }
+            }
+        });
 
-        Log.i("WeatherListFragment","notifyDataSetChanged");
+        //设置2秒延迟，更新recyclerView
+        final Integer interval = 2000;
+        Handler handler = new Handler();
+        handler.postDelayed(new Runnable() {
+            @Override
+            public void run() {
+                adapter.notifyDataSetChanged();
+                Toast.makeText(getActivity(),"刷新成功",Toast.LENGTH_SHORT).show();
+                Log.i("WeatherListFragment", "adapter.notifyDataSetChanged()");
+            }
+        }, interval);
+
     }
 }

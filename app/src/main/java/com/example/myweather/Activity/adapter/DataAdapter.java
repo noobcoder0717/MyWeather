@@ -44,7 +44,7 @@ public class DataAdapter extends RecyclerView.Adapter<DataAdapter.ViewHolder> {
 
         ViewHolder(View view){
             super(view);
-            weatherCard=view.findViewById(R.id.weather_photo);
+
             DataName=view.findViewById(R.id.city_name);
             weatherDegree=view.findViewById(R.id.weather_degree);
             weatherCardview=view.findViewById(R.id.weather_cardview);
@@ -77,7 +77,6 @@ public class DataAdapter extends RecyclerView.Adapter<DataAdapter.ViewHolder> {
         if(position!=dataList.size()-1){
             holder.DataName.setText(data.getCity());
             holder.weatherDegree.setText(data.getWendu()+"℃");
-            holder.weatherCardview.setBackgroundResource(R.drawable.weather);
             holder.weatherToday.setText(data.getWeatherToday());
         }
     }
