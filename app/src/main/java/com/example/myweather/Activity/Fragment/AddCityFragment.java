@@ -14,6 +14,7 @@ import androidx.appcompat.app.AppCompatActivity;
 import androidx.appcompat.widget.Toolbar;
 import androidx.fragment.app.Fragment;
 
+import com.example.myweather.Activity.Utils.Utils;
 import com.example.myweather.Activity.bean.City;
 import com.example.myweather.Activity.bean.ClientApi;
 import com.example.myweather.Activity.bean.Data;
@@ -66,64 +67,67 @@ public class AddCityFragment extends Fragment {
         button.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View view) {
-                final List<Data> dataList=LitePal.findAll(Data.class);
-                cityName = editText.getText().toString();
-                Retrofit retrofit = create();
-                ClientApi api = retrofit.create(ClientApi.class);
-                Observable<City> CityObservable = api.getCity(cityName);
-                CityObservable.subscribeOn(Schedulers.io())
-                        .observeOn(AndroidSchedulers.mainThread())
-                        .subscribe(new Observer<City>() {
-                            @Override
-                            public void onSubscribe(Disposable d) {
-                            }
+                if(Utils.isFastClick()){
+                    final List<Data> dataList = LitePal.findAll(Data.class);
+                    cityName = editText.getText().toString();
+                    Retrofit retrofit = create();
+                    ClientApi api = retrofit.create(ClientApi.class);
+                    Observable<City> CityObservable = api.getCity(cityName);
+                    CityObservable.subscribeOn(Schedulers.io())
+                            .observeOn(AndroidSchedulers.mainThread())
+                            .subscribe(new Observer<City>() {
+                                @Override
+                                public void onSubscribe(Disposable d) {
+                                }
 
-                            @Override
-                            public void onNext(City city) {
-                                String msg = city.getMsg();
-                                if (msg.equals("未获取到相关数据!")) {
-                                    Toast.makeText(getContext(), "未找到该城市", Toast.LENGTH_SHORT).show();
-                                } else {
-                                    String name = city.getData().getCity();//获取从服务器上返回的城市名
-                                    if (name.equals(cityName)) {//判断返回的城市是否与输入相同，因为输入“汕”会返回汕头的数据，所以需要添加该判断
-                                        if(city!=null){//判断目前要添加的城市之前是否添加过
-                                            Data data=new Data();
-                                            boolean flag=false;
-                                            for(Data d:dataList){
-                                                if(d.getCity().equals(cityName)){
-                                                    flag=true;
-                                                    break;
+                                @Override
+                                public void onNext(City city) {
+                                    String msg = city.getMsg();
+                                    if (msg.equals("未获取到相关数据!")) {
+                                        Toast.makeText(getContext(), "未找到该城市", Toast.LENGTH_SHORT).show();
+                                    } else {
+                                        String name = city.getData().getCity();//获取从服务器上返回的城市名
+                                        if (name.equals(cityName)) {//判断返回的城市是否与输入相同，因为输入“汕”会返回汕头的数据，所以需要添加该判断
+                                            if (city != null) {//判断目前要添加的城市之前是否添加过
+                                                Data data = new Data();
+                                                boolean flag = false;
+                                                for (Data d : dataList) {
+                                                    if (d.getCity().equals(cityName)) {
+                                                        flag = true;
+                                                        break;
+                                                    }
+                                                }
+                                                if (flag) {
+                                                    Toast.makeText(getContext(), "该城市已添加", Toast.LENGTH_SHORT).show();
+                                                } else {
+                                                    data.setAqi(city.getData().getAqi());
+                                                    data.setCity(city.getData().getCity());
+                                                    data.setGanmao(city.getData().getGanmao());
+                                                    data.setWendu(city.getData().getWendu());
+                                                    data.setYesterday(city.getData().getYesterday());
+                                                    data.setWeatherToday(city.getData().getForecast().get(0).getType());
+                                                    data.save();
+                                                    Toast.makeText(getContext(), "添加成功", Toast.LENGTH_SHORT).show();
                                                 }
                                             }
-                                            if (flag) {
-                                                Toast.makeText(getContext(),"该城市已添加",Toast.LENGTH_SHORT).show();
-                                            }else{
-                                                data.setAqi(city.getData().getAqi());
-                                                data.setCity(city.getData().getCity());
-                                                data.setGanmao(city.getData().getGanmao());
-                                                data.setWendu(city.getData().getWendu());
-                                                data.setYesterday(city.getData().getYesterday());
-                                                data.setWeatherToday(city.getData().getForecast().get(0).getType());
-                                                data.save();
-                                                Toast.makeText(getContext(), "添加成功", Toast.LENGTH_SHORT).show();
-                                            }
+                                        } else {
+                                            Toast.makeText(getContext(), "未找到该城市", Toast.LENGTH_SHORT).show();
                                         }
-                                    } else {
-                                        Toast.makeText(getContext(), "未找到该城市", Toast.LENGTH_SHORT).show();
                                     }
                                 }
-                            }
 
-                            @Override
-                            public void onError(Throwable e) {
-                            }
+                                @Override
+                                public void onError(Throwable e) {
+                                }
 
-                            @Override
-                            public void onComplete() {
-                            }
-                        });
+                                @Override
+                                public void onComplete() {
+                                }
+                            });
+                }
             }
         });
+
         return view;
     }
     @Override
