@@ -1,6 +1,8 @@
 package com.example.myweather.Activity.Fragment;
 
 import android.os.Bundle;
+import android.os.Handler;
+import android.util.DisplayMetrics;
 import android.util.Log;
 import android.view.LayoutInflater;
 import android.view.View;
@@ -12,6 +14,7 @@ import androidx.fragment.app.Fragment;
 import androidx.recyclerview.widget.LinearLayoutManager;
 import androidx.recyclerview.widget.RecyclerView;
 
+import com.example.myweather.Activity.Utils.LineChart;
 import com.example.myweather.Activity.adapter.ForecastAdapter;
 import com.example.myweather.Activity.bean.City;
 import com.example.myweather.Activity.bean.ClientApi;
@@ -45,9 +48,15 @@ public class WeatherDetailFragment extends Fragment {
     @Bind(R.id.temperature)
     TextView temperature;
 
+    @Bind(R.id.linechart)
+    LineChart lineChart;
+
     String CITYNAME;
 
     List<Forecast> forecastList;
+    List<String> xAxis;
+    List<Integer> low;
+    List<Integer> high;
 
     @Bind(R.id.forecast_recyclerview)
     RecyclerView recyclerView;
@@ -67,6 +76,9 @@ public class WeatherDetailFragment extends Fragment {
         ButterKnife.bind(this,view);
         CITYNAME=getArguments().getString("cityName");
         forecastList=new ArrayList<>();
+        xAxis=new ArrayList<>();
+        low=new ArrayList<>();
+        high=new ArrayList<>();
         System.out.println("onCreateView");
         return view;
     }
@@ -96,6 +108,23 @@ public class WeatherDetailFragment extends Fragment {
                         forecastList.add(city.getData().getForecast().get(0));
                         forecastList.add(city.getData().getForecast().get(1));
                         forecastList.add(city.getData().getForecast().get(2));
+                        forecastList.add(city.getData().getForecast().get(3));
+                        forecastList.add(city.getData().getForecast().get(4));
+                        xAxis.add(city.getData().getForecast().get(0).getDate());
+                        xAxis.add(city.getData().getForecast().get(1).getDate());
+                        xAxis.add(city.getData().getForecast().get(2).getDate());
+                        xAxis.add(city.getData().getForecast().get(3).getDate());
+                        xAxis.add(city.getData().getForecast().get(4).getDate());
+                        low.add(getIntTemperature(city.getData().getForecast().get(0).getLow()));
+                        low.add(getIntTemperature(city.getData().getForecast().get(1).getLow()));
+                        low.add(getIntTemperature(city.getData().getForecast().get(2).getLow()));
+                        low.add(getIntTemperature(city.getData().getForecast().get(3).getLow()));
+                        low.add(getIntTemperature(city.getData().getForecast().get(4).getLow()));
+                        high.add(getIntTemperature(city.getData().getForecast().get(0).getHigh()));
+                        high.add(getIntTemperature(city.getData().getForecast().get(1).getHigh()));
+                        high.add(getIntTemperature(city.getData().getForecast().get(2).getHigh()));
+                        high.add(getIntTemperature(city.getData().getForecast().get(3).getHigh()));
+                        high.add(getIntTemperature(city.getData().getForecast().get(4).getHigh()));
                         recyclerView.setLayoutManager(new LinearLayoutManager(getActivity()));
                         adapter=new ForecastAdapter(forecastList);
                         recyclerView.setAdapter(adapter);
@@ -111,6 +140,26 @@ public class WeatherDetailFragment extends Fragment {
                     public void onComplete() {
                     }
                 });
+
+        Handler handler=new Handler();
+        handler.postDelayed(new Runnable() {
+            @Override
+            public void run() {
+                DisplayMetrics dm=new DisplayMetrics();
+                int width=dm.widthPixels;
+                int height=dm.heightPixels;
+                float xGap=0.8f*width/(xAxis.size()-1);
+
+                lineChart.xAxis=xAxis;
+                lineChart.low=low;
+                lineChart.high=high;
+                lineChart.width=width;
+                lineChart.height=height;
+                lineChart.xGap=xGap;
+
+            }
+        },1000);
+
 
     }
     @Override
@@ -130,5 +179,10 @@ public class WeatherDetailFragment extends Fragment {
                 .addCallAdapterFactory(RxJava2CallAdapterFactory.create())
                 .addConverterFactory(GsonConverterFactory.create())
                 .build();
+    }
+
+    public int getIntTemperature(String text){
+        String temp=text.substring(3,text.length()-1);
+        return Integer.parseInt(temp);
     }
 }

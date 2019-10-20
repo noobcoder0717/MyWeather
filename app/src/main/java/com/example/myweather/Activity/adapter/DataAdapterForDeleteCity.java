@@ -6,6 +6,7 @@ import android.view.View;
 import android.view.ViewGroup;
 import android.widget.ImageView;
 import android.widget.TextView;
+import android.widget.Toast;
 
 import androidx.cardview.widget.CardView;
 import androidx.recyclerview.widget.RecyclerView;
@@ -71,11 +72,15 @@ public class DataAdapterForDeleteCity extends RecyclerView.Adapter<DataAdapterFo
         holder.delete.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View view) {
+                int position=holder.getLayoutPosition();
                 String city=holder.DataName.getText().toString();
                 Data data=new Data();
                 data.setCity(city);
                 LitePal.deleteAll(Data.class,"city=?",city);
 
+                dataList.remove(position);
+                notifyDataSetChanged();
+                Toast.makeText(context,"删除成功",Toast.LENGTH_SHORT).show();
             }
         });
 

@@ -47,4 +47,11 @@ dependencies {
     //litepal
     implementation 'org.litepal.android:java:3.0.0'
 
+    //MPAndroidChart
+//    implementation 'com.github.PhilJay:MPAndroidChart:v3.0.3'
+
+    //hellochart
+//    implementation 'com.github.lecho:hellocharts-android:v1.5.8'
+
+
 }
