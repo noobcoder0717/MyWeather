@@ -3,8 +3,8 @@
     package="com.example.myweather">
 
     <uses-permission android:name="android.permission.INTERNET" />
-    <uses-permission android:name="android.permission.READ_EXTERNAL_STORAGE"/>
-    <uses-permission android:name="android.permission.WRITE_EXTERNAL_STORAGE"/>
+    <uses-permission android:name="android.permission.READ_EXTERNAL_STORAGE" />
+    <uses-permission android:name="android.permission.WRITE_EXTERNAL_STORAGE" />
 
     <application
         android:name="org.litepal.LitePalApplication"
@@ -15,17 +15,16 @@
         android:roundIcon="@mipmap/ic_launcher_round"
         android:supportsRtl="true"
         android:theme="@style/AppTheme">
-        <activity android:name=".Activity.DeleteCityActivity"></activity>
+        <activity android:name=".Activity.DeleteCityActivity" />
         <activity android:name=".Activity.AddCityActivity" />
         <activity android:name=".Activity.WeatherDetailActivity" />
-        <activity android:name=".Activity.WeatherListActivity">
+        <activity android:name=".Activity.WeatherListActivity"/>
+        <activity android:name=".Activity.WelcomeActivity">
             <intent-filter>
                 <action android:name="android.intent.action.MAIN" />
-
                 <category android:name="android.intent.category.LAUNCHER" />
             </intent-filter>
         </activity>
-        <activity android:name=".Activity.WelcomeActivity"/>
     </application>
 
 </manifest>

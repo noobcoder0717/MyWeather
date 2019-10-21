@@ -53,5 +53,6 @@ dependencies {
     //hellochart
 //    implementation 'com.github.lecho:hellocharts-android:v1.5.8'
 
+    implementation 'com.github.PhilJay:MPAndroidChart:v3.0.1'
 
 }

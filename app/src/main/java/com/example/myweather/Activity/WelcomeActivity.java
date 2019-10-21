@@ -32,7 +32,7 @@ public class WelcomeActivity extends AppCompatActivity {
         welcomePicture.startAnimation(ani);
         welcomeText.startAnimation(ani);
 
-        Integer time=3000;
+        Integer time=1000;
         Handler handler=new Handler();
         handler.postDelayed(new Runnable() {
             @Override
