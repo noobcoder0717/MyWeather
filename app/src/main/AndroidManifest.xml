@@ -15,11 +15,16 @@
         android:roundIcon="@mipmap/ic_launcher_round"
         android:supportsRtl="true"
         android:theme="@style/AppTheme">
-        <activity android:name=".Activity.DeleteCityActivity" />
-        <activity android:name=".Activity.AddCityActivity" />
-        <activity android:name=".Activity.WeatherDetailActivity" />
-        <activity android:name=".Activity.WeatherListActivity"/>
-        <activity android:name=".Activity.WelcomeActivity">
+        <activity android:name=".Activity.DeleteCityActivity"
+            android:screenOrientation="portrait"/>
+        <activity android:name=".Activity.AddCityActivity"
+            android:screenOrientation="portrait"/>
+        <activity android:name=".Activity.WeatherDetailActivity"
+            android:screenOrientation="portrait"/>
+        <activity android:name=".Activity.WeatherListActivity"
+            android:screenOrientation="portrait"/>
+        <activity android:name=".Activity.WelcomeActivity"
+            android:screenOrientation="portrait">
             <intent-filter>
                 <action android:name="android.intent.action.MAIN" />
                 <category android:name="android.intent.category.LAUNCHER" />
