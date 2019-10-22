@@ -65,7 +65,7 @@ public class DataAdapter extends RecyclerView.Adapter<DataAdapter.ViewHolder> {
                 int position=holder.getAdapterPosition();
                 String cityName=dataList.get(position).getCity();
                 if(position!=dataList.size()-1) {
-                    WeatherDetailActivity.start(context, cityName);
+                    WeatherDetailActivity.start(context, cityName,position);
                 }else{
                     AddCityActivity.start(context);
                 }

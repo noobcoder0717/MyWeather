@@ -4,4 +4,14 @@
     android:layout_width="match_parent"
     android:layout_height="match_parent"
     android:orientation="vertical"
-    android:id="@+id/weather_detail_container"></LinearLayout>
+    android:id="@+id/weather_detail_container">
+
+    <androidx.viewpager.widget.ViewPager
+        android:id="@+id/weather_detail_viewpager"
+        android:layout_width="match_parent"
+        android:layout_height="match_parent"/>
+
+
+
+
+</LinearLayout>
