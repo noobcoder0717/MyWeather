@@ -49,7 +49,7 @@ public class ForecastAdapter extends RecyclerView.Adapter<ForecastAdapter.ViewHo
         String lowTemperature=forecast.getLow().substring(3);
         String highTemperature=forecast.getHigh().substring(3);
         holder.weekday.setText(forecast.getDate());
-        holder.forecast.setText(lowTemperature+"   "+highTemperature);
+        holder.forecast.setText(lowTemperature+" — "+highTemperature);
         switch(forecast.getType()){
             case "多云":
                 holder.weatherType.setImageResource(R.drawable.cloudyandsunny);

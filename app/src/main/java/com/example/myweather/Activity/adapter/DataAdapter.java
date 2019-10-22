@@ -6,6 +6,7 @@ import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
 import android.widget.ImageView;
+import android.widget.LinearLayout;
 import android.widget.TextView;
 
 import androidx.cardview.widget.CardView;
@@ -36,11 +37,12 @@ public class DataAdapter extends RecyclerView.Adapter<DataAdapter.ViewHolder> {
 
 
     class ViewHolder extends RecyclerView.ViewHolder{
-        CardView weatherCardview;
+        LinearLayout weatherCardview;
         CardView weatherCard;
         TextView DataName;
         TextView weatherDegree;
         TextView weatherToday;
+        ImageView weathernow;
 
         ViewHolder(View view){
             super(view);
@@ -49,6 +51,7 @@ public class DataAdapter extends RecyclerView.Adapter<DataAdapter.ViewHolder> {
             weatherDegree=view.findViewById(R.id.weather_degree);
             weatherCardview=view.findViewById(R.id.weather_cardview);
             weatherToday=view.findViewById(R.id.weather_today);
+            weathernow=view.findViewById(R.id.weather_now);
         }
     }
 
@@ -78,6 +81,50 @@ public class DataAdapter extends RecyclerView.Adapter<DataAdapter.ViewHolder> {
             holder.DataName.setText(data.getCity());
             holder.weatherDegree.setText(data.getWendu()+"℃");
             holder.weatherToday.setText(data.getWeatherToday());
+            switch(data.getWeatherToday()){
+                case "多云":
+                    holder.weathernow.setImageResource(R.drawable.cloudyandsunny_list);
+                    break;
+                case "晴":
+                    holder.weathernow.setImageResource(R.drawable.sunny_list);
+                    break;
+                case "阴":
+                    holder.weathernow.setImageResource(R.drawable.cloudy_list);
+                    break;
+                case "小雨":
+                    holder.weathernow.setImageResource(R.drawable.smallrain_list);
+                    break;
+                case "中雨":
+                    holder.weathernow.setImageResource(R.drawable.middlerain_list);
+                    break;
+                case "大雨":
+                    holder.weathernow.setImageResource(R.drawable.bigrain_list);
+                    break;
+                case "暴雨":
+                    holder.weathernow.setImageResource(R.drawable.heavyrain_list);
+                    break;
+                case "小雪":
+                    holder.weathernow.setImageResource(R.drawable.smallsnow_list);
+                    break;
+                case "中雪":
+                    holder.weathernow.setImageResource(R.drawable.middlesnow_list);
+                    break;
+                case "大雪":
+                    holder.weathernow.setImageResource(R.drawable.bigsnow_list);
+                    break;
+                case "雾":
+                    holder.weathernow.setImageResource(R.drawable.fog_list);
+                    break;
+                case "雨夹雪":
+                    holder.weathernow.setImageResource(R.drawable.rainandsnow_list);
+                    break;
+                case "雷阵雨":
+                    holder.weathernow.setImageResource(R.drawable.thunder_list);
+                    break;
+                default:
+
+                    break;
+            }
         }
     }
 

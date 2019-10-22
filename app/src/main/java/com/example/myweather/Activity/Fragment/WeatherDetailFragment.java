@@ -275,6 +275,7 @@ public class WeatherDetailFragment extends Fragment {
         lowTemp.setValueTextSize(10f);
         lowTemp.setDrawCircleHole(false);
         lowTemp.setLineWidth(1);
+        lowTemp.setMode(LineDataSet.Mode.CUBIC_BEZIER);
 
         highTemp.setValueFormatter(new IValueFormatter() {//设置温度显示样式，如果不设置，将默认显示xx.0，而不是xx℃
             @Override
@@ -288,6 +289,7 @@ public class WeatherDetailFragment extends Fragment {
         highTemp.setLineWidth(1);
         highTemp.setCircleColor(getResources().getColor(R.color.highTemp));
         highTemp.setColor(getResources().getColor(R.color.highTemp));
+        highTemp.setMode(LineDataSet.Mode.CUBIC_BEZIER);
 
 
 
